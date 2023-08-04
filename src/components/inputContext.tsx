@@ -30,12 +30,12 @@ const InputProvider: React.FC = ({ children }: React.PropsWithChildren<{}>) => {
       url: "https://server-nestjs.up.railway.app/chat",
       method: "POST",
     });
-    setMessage(inputMess.data);
+    setMessage(inputMess.data.reverse());
     console.log(inputMess.data);
   };
 
   const handleSendBtn = async () => {
-    setMessage([...message, {content: Input }]);
+    setMessage([...message, {content: input }]);
 
     setInput("");
     const sendMessage = await axios({
@@ -46,6 +46,7 @@ const InputProvider: React.FC = ({ children }: React.PropsWithChildren<{}>) => {
         content: input,
       },
     });
+    setMessage([...message, {content: sendMessage.data }]);
     console.log(sendMessage);
   };
 
