@@ -8,8 +8,7 @@ const Message: React.FC = () => {
   const [messageTimestamps, setMessageTimestamps] = useState<Date[]>([]);
 
   useMemo(()=>{
-
-  },[newText.message])
+  },[newText.message,newText.input])
 
   useEffect(() => {
     // Update timestamps for each message when newText.message changes
@@ -55,6 +54,7 @@ const Message: React.FC = () => {
           </div>
         );
       })}
+      {newText.loading ? <p>loading</p> : ""}
     </div>
   );
 };

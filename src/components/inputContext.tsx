@@ -5,6 +5,7 @@ import axios from "axios";
 import Input from "antd/es/input/Input";
 
 interface InputContextProps {
+  loading : boolean
   input: string;
   message: any;
   setInput: React.Dispatch<React.SetStateAction<string>>;
@@ -14,6 +15,7 @@ interface InputContextProps {
 }
 
 const InputContext = createContext<InputContextProps>({
+  loading: false,
   input: "",
   message: "",
   setInput: () => {},
@@ -25,6 +27,7 @@ const InputContext = createContext<InputContextProps>({
 const InputProvider: React.FC = ({ children }: React.PropsWithChildren<{}>) => {
   const [input, setInput] = useState<string>("");
   const [message, setMessage] = useState<any>([]);
+  const [loading , setLoading] = useState<boolean>(false)
   const mess = async () => {
     const inputMess = await axios({
       url: "https://server-nestjs.up.railway.app/chat",
@@ -35,22 +38,24 @@ const InputProvider: React.FC = ({ children }: React.PropsWithChildren<{}>) => {
   };
 
   const handleSendBtn = async () => {
-    setMessage([...message, {content: input }]);
-
+    setMessage([...message, {content: input , role :'user'}]);
     setInput("");
+    setLoading (true)
     const sendMessage = await axios({
       url: "https://server-nestjs.up.railway.app/chat/send",
       method: "POST",
-      data: {
+      data: { 
         id:"40f53f47-9e77-44c1-ad50-3cb2447b3b5f",
         content: input,
       },
     });
-    setMessage([...message, {content: sendMessage.data }]);
+    setLoading(false)
+    setMessage([...message, {content: input , role :'user'},{content: sendMessage.data , role : "assistant"}]);
     console.log(sendMessage);
   };
 
   const inputValue: InputContextProps = {
+    loading,
     input,
     message,
     setInput,
